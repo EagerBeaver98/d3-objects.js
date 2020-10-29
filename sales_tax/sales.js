@@ -23,13 +23,19 @@ const companySalesData = [
 ];
 
 const combineSales = function(sales) {
-
+  let totalSales = 0;
+  for (const number of sales) {
+    totalSales += sales[number];
+  }
+  return totalSales;
 };
 
 const calculateSalesTax = function(salesData, taxRates) {
   //split by comp
-  for (const name of salesData) {
-    
+  for (const name in salesData) {
+    for (const province in salesData) {
+      salesData[province]
+    }
   }
   //add provincial sales totals
   //apply provincial tax
