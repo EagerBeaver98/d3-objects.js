@@ -22,23 +22,43 @@ const companySalesData = [
   }
 ];
 
-const combineSales = function(sales) {
+const combineSales = function(sales) { //adds all sales together
   let totalSales = 0;
-  for (const number of sales) {
-    totalSales += sales[number];
+  for (let number of sales) {
+    totalSales += number;
   }
   return totalSales;
 };
 
+const taxCalc = function(sales, taxes) {
+  let final = Math.floor(sales + (sales * taxes));
+  let sub = final - sales;
+  return [sales, sub];
+};
+
 const calculateSalesTax = function(salesData, taxRates) {
-  //split by comp
-  for (const name in salesData) {
-    for (const province in salesData) {
-      salesData[province]
+  const final = {};
+  let total = [];
+  for (const entry in salesData) { //loops through salesData object
+    const sales = combineSales(salesData[entry].sales);
+    if (salesData[entry].province === "AB") { //adds tax by province
+      total = taxCalc(sales, taxRates.AB);
+    } else if (salesData[entry].province === "BC") {
+      total = taxCalc(sales, taxRates.BC);
+    } else if (salesData[entry].province === "SK") {
+      total = taxCalc(sales, taxRates.SK);
+    }
+    if (final[salesData[entry].name]) {
+      final[salesData[entry].name].totalSales += total[0];
+      final[salesData[entry].name].totalTaxes += total[1];
+    } else {
+      final[salesData[entry].name] = {};
+      final[salesData[entry].name].totalSales = total[0];
+      final[salesData[entry].name].totalTaxes = total[1];
     }
   }
-  //add provincial sales totals
-  //apply provincial tax
-  //sub sales from total to get tax
-  //combine provincial totals
+  return final;
 };
+
+console.log(calculateSalesTax(companySalesData, salesTaxRates));
+
